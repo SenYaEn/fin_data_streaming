@@ -1,20 +1,21 @@
 from kafka import KafkaConsumer
-from time import sleep
 from json import dumps,loads
 import json
 from s3fs import S3FileSystem
 from datetime import datetime
+import pandas as pd
 
-
-def consume(kafka_server, kafka_topic, auto_offset_reset_value, s3_bucket_name, file_name):
+def consume (kafka_topic, kafka_server, auto_offset_reset_value, group_id_value, auto_commit_setting, s3_bucket_name, file_name):
     
     s3 = S3FileSystem()
-    
+
     consumer = KafkaConsumer(
         kafka_topic, 
         value_deserializer=lambda x: json.loads(x) if x != "" else 0, 
         bootstrap_servers=kafka_server, 
-        auto_offset_reset=auto_offset_reset_value)
+        auto_offset_reset=auto_offset_reset_value,
+        group_id = group_id_value,
+        enable_auto_commit=auto_commit_setting)
     
     try:  
         for c in consumer:    
@@ -26,10 +27,13 @@ def consume(kafka_server, kafka_topic, auto_offset_reset_value, s3_bucket_name, 
         print("Done Consuming")
 
 
-kafka_server = "127.0.0.1:9092"
-kafka_topic = "test_stocks"
-auto_offset_reset_value = "latest"
-s3_bucket_name = "kafka-test-senyaen"
-file_name = "stocks_test_{}.json"
 
-consume(kafka_server, kafka_topic, auto_offset_reset_value, s3_bucket_name, file_name)
+kafka_server = "127.0.0.1:9092"
+kafka_topic = "marketstack_intraday_apple"
+group_id_value = "marketstack_intraday_apple_group"
+auto_offset_reset_value = "earliest"
+auto_commit_setting = True
+s3_bucket_name = "marketstack-intraday"
+file_name = "intraday_apple{}.json"
+
+consume (kafka_topic, kafka_server, auto_offset_reset_value, group_id_value, auto_commit_setting, s3_bucket_name, file_name)
