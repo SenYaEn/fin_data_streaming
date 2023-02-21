@@ -6,7 +6,17 @@ from datetime import datetime
 import pandas as pd
 
 class ConsumerMarketstack:
+    """Defines a Consumer object with Kafka topic as a source and S3 Bucket as a sink.
     
+    Instance parameters:
+    :kafka_topic: Kafka topic to which messages are to be posted
+    :group_id_value: Group name to which Kafka topic belongs
+    :auto_offset_reset_value: Kafka topic offset reset value
+    :auto_commit_setting: Defines whether messages whould be commited as soon as received
+    :s3_bucket_name: S3 bucket name where files should be saved
+    :file_name: Fine name convention
+    :kafka_server: Kafka bootstrap server
+    """
     def __init__(self,
                  kafka_topic, 
                  group_id_value,
@@ -25,6 +35,7 @@ class ConsumerMarketstack:
         self.file_name = file_name
         
     def set_consumer(self):
+        """Sets Kafka consumer object based on the provided parameters"""
         consumer = KafkaConsumer(
             self.kafka_topic, 
             value_deserializer = lambda x: json.loads(x) if x != "" else 0, 
@@ -35,6 +46,8 @@ class ConsumerMarketstack:
         return consumer
     
     def main(self):
+        """Executes full cycle data pull starting with consuming a message from 
+        Kafka topic and ending with saving the message as a JSON file in S3 bucket"""
         s3 = S3FileSystem()
         consumer = self.set_consumer()
         
