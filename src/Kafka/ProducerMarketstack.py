@@ -13,19 +13,19 @@ class ProducerMarketstack:
     and Kafka topic as a sink.
     
     Class parameters:
-    :base_url: API related parameter - base URL
-    :encoding: Format used when encoding a Kafka message
-    :path_params: API related parameter containing the endpoint
-    :limit: API related parameter containing the limit of records per page
+    :base_url str: API related parameter - base URL
+    :encoding str: Format used when encoding a Kafka message
+    :path_params str: API related parameter containing the endpoint
+    :limit int: API related parameter containing the limit of records per page
     
     Instance parameters:
-    :kafka_topic: Kafka topic to which messages are to be posted
-    :kafka_server: Kafka bootstrap server
-    :symbols: API related parameter containing the stock code for which data is to be pulled
-    :access_key: API related parameter containing API access key
-    :interval: API related parameter containing the time grain level at which the stock prices should be provided
-    :auto_offset_reset_value: Kafka topic offset reset value
-    :consumer_timeout_ms_value: Time period in microsecond after which Kafka consumer should shut down
+    :kafka_topic str: Kafka topic to which messages are to be posted
+    :kafka_server str: Kafka bootstrap server
+    :symbols array: API related parameter containing the stock code for which data is to be pulled
+    :access_key str: API related parameter containing API access key
+    :interval str: API related parameter containing the time grain level at which the stock prices should be provided
+    :auto_offset_reset_value int: Kafka topic offset reset value
+    :consumer_timeout_ms_value int: Time period in microsecond after which Kafka consumer should shut down
     """
     base_url = "https://api.marketstack.com/v1"
     encoding = 'utf-8'
