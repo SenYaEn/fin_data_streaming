@@ -9,13 +9,13 @@ class ConsumerMarketstack:
     """Defines a Consumer object with Kafka topic as a source and S3 Bucket as a sink.
     
     Instance parameters:
-    :kafka_topic: Kafka topic to which messages are to be posted
-    :group_id_value: Group name to which Kafka topic belongs
-    :auto_offset_reset_value: Kafka topic offset reset value
-    :auto_commit_setting: Defines whether messages whould be commited as soon as received
-    :s3_bucket_name: S3 bucket name where files should be saved
-    :file_name: Fine name convention
-    :kafka_server: Kafka bootstrap server
+    :kafka_topic str: Kafka topic to which messages are to be posted
+    :group_id_value int: Group name to which Kafka topic belongs
+    :auto_offset_reset_value int: Kafka topic offset reset value
+    :auto_commit_setting bool: Defines whether messages whould be commited as soon as received
+    :s3_bucket_name str: S3 bucket name where files should be saved
+    :file_name str: Fine name convention
+    :kafka_server str: Kafka bootstrap server
     """
     def __init__(self,
                  kafka_topic, 
