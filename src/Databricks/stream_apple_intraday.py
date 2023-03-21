@@ -54,7 +54,7 @@ streamDf = (spark.readStream.format("cloudFiles") # cloudFiles as a format autom
 
 # COMMAND ----------
 
-if trigger_once == True:
+if trigger_once == True or trigger_once.lower() in ['True', 'true']:
     (streamDf.writeStream 
      .trigger(once=True) # this option allows to run the data load on schedule instead of continuous mode
      .format("delta")

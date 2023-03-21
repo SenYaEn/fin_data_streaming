@@ -11,7 +11,7 @@ class ConsumerMarketstack:
     Instance parameters:
     :kafka_topic str: Kafka topic to which messages are to be posted
     :group_id_value int: Group name to which Kafka topic belongs
-    :auto_offset_reset_value int: Kafka topic offset reset value
+    :auto_offset_reset_value int: Kafka topic offset reset value ('earliest' or 'latest')
     :auto_commit_setting bool: Defines whether messages whould be commited as soon as received
     :s3_bucket_name str: S3 bucket name where files should be saved
     :file_name str: Fine name convention

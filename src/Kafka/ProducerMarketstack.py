@@ -39,7 +39,9 @@ class ProducerMarketstack:
                  access_key, 
                  interval,
                  auto_offset_reset_value = "earliest", 
-                 consumer_timeout_ms_value = 2000):
+                 consumer_timeout_ms_value = 2000,
+                 default_start_date = '2023-03-20 00:00:00'
+                ):
         
         self.kafka_topic = kafka_topic
         self.kafka_server = kafka_server
@@ -48,24 +50,30 @@ class ProducerMarketstack:
         self.symbols = symbols
         self.access_key = access_key
         self.interval = interval
+        self.default_start_date = default_start_date
         
     def get_latest_date_in_topic(self):
         """Returns last date value (Marketstack API payload specific) based 
         on the last commited message in the topic
         """
-        consumer = KafkaConsumer(
-            self.kafka_topic, 
-            value_deserializer = lambda x: json.loads(x) if x != "" else 0, 
-            bootstrap_servers = self.kafka_server, 
-            auto_offset_reset = self.auto_offset_reset_value,
-            consumer_timeout_ms = self.consumer_timeout_ms_value)
-    
-        messages = []
+        try:
+            consumer = KafkaConsumer(
+                self.kafka_topic, 
+                value_deserializer = lambda x: json.loads(x) if x != "" else 0, 
+                bootstrap_servers = self.kafka_server, 
+                auto_offset_reset = self.auto_offset_reset_value,
+                consumer_timeout_ms = self.consumer_timeout_ms_value)
         
-        for item in consumer:
-            messages.append(item.value)
+            messages = []
+            
+            for item in consumer:
+                messages.append(item.value)
+            
+            latest_date = pd.to_datetime(messages[len(messages)-1]["data"][0]["date"]).strftime("%Y-%m-%d %H:%M:%S")
+        except:
+            latest_date = self.default_start_date
+            pass
         
-        latest_date = pd.to_datetime(messages[len(messages)-1]["data"][0]["date"]).strftime("%Y-%m-%d %H:%M:%S")
         return latest_date
     
     def get_intraday_api_response(self, date_from, offset=0):
